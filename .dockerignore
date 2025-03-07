@@ -1,0 +1,12 @@
+# files ignored by Docker in build context
+.eslint*
+.git/
+.github/
+.husky/
+.lint*
+.prettier*
+.vscode/
+development.Dockerfile
+docker-compose.yml
+docs/
+node_modules/

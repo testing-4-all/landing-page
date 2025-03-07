@@ -1,0 +1,55 @@
+version: '3'
+
+includes:
+  utils:
+    taskfile: .ops/taskfiles/utils.yaml
+
+env:
+  PROJECT: 'api'
+  WERF_NELM: '1'
+
+tasks:
+  help:
+    desc: Shows the list of all available commands.
+    cmds:
+      - task --list-all
+
+  install-deps:
+    desc: Install project dependencies.
+    cmds:
+      - task: utils:check-tool-asdf
+      - asdf install
+
+  install:
+    desc: Install node dependencies.
+    cmds:
+      - task: utils:check-tool-node
+      - npm ci
+
+  build:
+    desc: Build the project.
+    cmds:
+      - task: utils:node-modules
+      - npm run build
+
+  setup:
+    desc: Run the complete setup of the project.
+    cmds:
+      - task: install
+      - task: build
+
+  lint:
+    desc: Run project lint.
+    cmds:
+      - task: utils:node-modules
+      - npm run lint
+
+  clean:
+    desc: Clean up the repository of changes and checkout to main.
+    cmds:
+      - task: utils:clean
+
+  generate-env:
+    desc: Generates the .env of the project
+    cmds:
+      - cp .env.example .env

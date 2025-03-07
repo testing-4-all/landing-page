@@ -1,0 +1,31 @@
+# Anchors
+x-restart-policy: &restart
+  restart: unless-stopped
+
+x-networking: &networking
+  networks:
+    testing4all:
+
+x-defaults: &defaults
+  <<: [*restart, *networking]
+
+# Services
+services:
+  app:
+    <<: *defaults
+    container_name: "testing4all-app"
+    working_dir: /usr/app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: testing4all-app:latest
+    ports:
+      - target: 3000
+        published: "3000"
+    volumes:
+      - type: bind
+        source: "./"
+        target: /usr/app
+
+networks:
+  testing4all:
