@@ -16,7 +16,7 @@ export function AgendaSection() {
   useEffect(() => {
     async function fetchAgenda() {
       try {
-        const res = await fetch("http://localhost:1337/api/agendas", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_HOST}/api/agendas`, {
           headers: {
             "Authorization": `Bearer ${process.env.NEXT_PUBLIC_STRAPI_READ_TOKEN}`,            
             "Content-Type": "application/json"
