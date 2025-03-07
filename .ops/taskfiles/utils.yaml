@@ -1,0 +1,69 @@
+version: '3'
+
+tasks:
+  print-info:
+    internal: true
+    silent: true
+    cmds:
+      - |
+        color=$(tput setaf 4)
+        end=$(tput sgr0)
+        echo -e "${color}{{.TEXT}}${end}"
+
+  print-warning:
+    internal: true
+    silent: true
+    cmds:
+      - |
+        color=$(tput setaf 3)
+        end=$(tput sgr0)
+        echo -e "${color}{{.TEXT}}${end}"
+
+  print-success:
+    internal: true
+    silent: true
+    cmds:
+      - |
+        color=$(tput setaf 2)
+        end=$(tput sgr0)
+        echo -e "${color}{{.TEXT}}${end}"
+
+  check-tool-*:
+    internal: true
+    silent: true
+    vars:
+      TOOL: '{{index .MATCH 0}}'
+    preconditions:
+      - sh: |
+          {{.TOOL}} --version || {{.TOOL}} version
+        msg: To run this command you need to install `{{.TOOL}}` first
+
+  node-modules:
+    internal: true
+    silent: true
+    preconditions:
+      - sh: test -r node_modules
+        msg: You must install all dependencies.
+    cmds:
+      - task: check-tool-node
+
+  build-deps:
+    internal: true
+    silent: true
+    preconditions:
+      - sh: test -r dist
+        msg: The projects has not been build.
+    cmds:
+      - task: check-tool-node
+
+  clean:
+    internal: true
+    ignore_error: true
+    cmds:
+      - git clean -f
+      - git reset HEAD~
+      - git checkout .
+      - git checkout master
+      - git pull origin master
+      - rm -r node_modules
+      - rm -r dist
